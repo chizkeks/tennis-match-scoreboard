@@ -34,14 +34,14 @@ public class NewMatchServlet extends HttpServlet {
         } catch (PlayerNotFoundException e) {
             firstPlayer = new PlayerDto();
             firstPlayer.setName(firstPlayerName);
-            playerService.createPlayer(firstPlayer);
+            firstPlayer = playerService.createPlayer(firstPlayer);
         }
         try {
             secondPlayer = playerService.getPlayerByName(secondPlayerName);
         } catch (PlayerNotFoundException e) {
             secondPlayer = new PlayerDto();
             secondPlayer.setName(secondPlayerName);
-            playerService.createPlayer(secondPlayer);
+            secondPlayer = playerService.createPlayer(secondPlayer);
         }
     }
 }
