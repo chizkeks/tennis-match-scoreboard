@@ -8,8 +8,6 @@ import org.petprojects.tennis.dto.OngoingMatchDto;
 import org.petprojects.tennis.dto.Score;
 import org.petprojects.tennis.dto.Scorer;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MatchScoreCalculationService {

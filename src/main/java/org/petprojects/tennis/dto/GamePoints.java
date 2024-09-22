@@ -23,11 +23,4 @@ public enum GamePoints {
             return GamePoints.values()[this.ordinal() + 1];
     }
 
-    public GamePoints previous() {
-        if (this == GamePoints.ZERO)
-            throw new IllegalStateException("There is no more previous values");
-        else
-            return GamePoints.values()[this.ordinal() - 1];
-    }
-
 }
