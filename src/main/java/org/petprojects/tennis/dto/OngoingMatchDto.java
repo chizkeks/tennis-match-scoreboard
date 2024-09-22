@@ -13,10 +13,11 @@ public class OngoingMatchDto {
     private Score<GamePoints> gameScore;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private List<Score<Integer>> setsScore;
+    private List<Score<Integer>> setsScore = new ArrayList<>();
     private PlayerDto firstPlayer;
     private PlayerDto secondPlayer;
     private PlayerDto winner;
+    private Score<Integer> tieBreakScore = new Score<>(0, 0);
 
     public void resetGameScore() {
         gameScore.setFirstPlayerScore(GamePoints.ZERO);
@@ -24,15 +25,17 @@ public class OngoingMatchDto {
     }
 
     public Score<Integer> getOngoingSetScore() {
-        if(setsScore.isEmpty()) {
+        if(setsScore == null || setsScore.isEmpty()) {
             Score<Integer> curScore = new Score<>(0, 0);
             setsScore.add(curScore);
-            return curScore;
         }
         return setsScore.get(setsScore.size() - 1);
     }
     public void addSet() {
         setsScore.add(new Score<>(0, 0));
+    }
+    public void addSet(Score<Integer> set) {
+        setsScore.add(set);
     }
     public int  getFirstPlayerWonSets() {
         int counter = 0;
@@ -50,4 +53,5 @@ public class OngoingMatchDto {
         }
         return counter;
     }
+
 }

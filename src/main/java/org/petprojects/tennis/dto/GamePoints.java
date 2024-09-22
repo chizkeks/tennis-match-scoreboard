@@ -18,9 +18,16 @@ public enum GamePoints {
 
     public GamePoints next() {
         if (this == GamePoints.ADVANTAGE)
-            throw new IllegalStateException("Can not call next() on ADVANTAGE value, cause it is the last value");
+            throw new IllegalStateException("Cannot advance from current game point.");
         else
             return GamePoints.values()[this.ordinal() + 1];
+    }
+
+    public GamePoints previous() {
+        if (this == GamePoints.ZERO)
+            throw new IllegalStateException("There is no more previous values");
+        else
+            return GamePoints.values()[this.ordinal() - 1];
     }
 
 }
