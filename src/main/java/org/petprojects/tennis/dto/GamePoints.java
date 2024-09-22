@@ -15,4 +15,12 @@ public enum GamePoints {
     GamePoints(String code) {
         this.code = code;
     }
+
+    public GamePoints next() {
+        if (this == GamePoints.ADVANTAGE)
+            throw new IllegalStateException("Can not call next() on ADVANTAGE value, cause it is the last value");
+        else
+            return GamePoints.values()[this.ordinal() + 1];
+    }
+
 }
