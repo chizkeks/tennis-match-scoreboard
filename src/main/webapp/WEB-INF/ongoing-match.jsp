@@ -86,15 +86,5 @@ ${param.name}
         </form>
     </div>
 </div>
-
-<script>
-    function  getReqParams(scorer) {
-        if(scorer == 1) {
-
-        } else {
-
-        }
-    }
-</script>
 </body>
 </html>
