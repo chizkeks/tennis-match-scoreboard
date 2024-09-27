@@ -32,7 +32,7 @@ public class OngoingMatchServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UUID uuid = UUID.fromString(req.getParameter("uuid"));
         OngoingMatchDto match = ongoingMatchesService.getMatch(uuid);
-        matchScoreCalculationService.updateScore(match, req.getParameter("player").equals("1") ? Scorer.FIRST_PLAYER : Scorer.SECOND_PLAYER);
+        matchScoreCalculationService.updateScore(match, req.getParameter("scorer").equals("1") ? Scorer.FIRST_PLAYER : Scorer.SECOND_PLAYER);
         req.setAttribute("firstPlayerName", match.getFirstPlayer().getName());
         req.setAttribute("secondPlayerName", match.getSecondPlayer().getName());
         req.setAttribute("playersScore", match.getGameScore());

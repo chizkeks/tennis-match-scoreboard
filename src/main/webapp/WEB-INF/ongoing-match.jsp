@@ -76,13 +76,25 @@ ${param.name}
     </c:forEach>
     <br/>
     <div class="buttons">
-        <form method="post" action="ongoing-match?uuid=${param['uuid']}&player=1">
-        <button type="submit">Очко Игрока 1</button>
+        <form method="post" action="ongoing-match?uuid=${param['uuid']}">
+            <input type="hidden" name="scorer" value = "1">
+            <button type="submit" onclick="getParams()">Очко Игрока 1</button>
         </form>
-        <form method="post" action="ongoing-match?uuid=${param['uuid']}&player=2">
-        <button type="submit">Очко Игрока 2</button>
+        <form method="post" action="ongoing-match?uuid=${param['uuid']}">
+            <input type="hidden" name="scorer" value = "2">
+            <button type="submit">Очко Игрока 2</button>
         </form>
     </div>
 </div>
+
+<script>
+    function  getReqParams(scorer) {
+        if(scorer == 1) {
+
+        } else {
+
+        }
+    }
+</script>
 </body>
 </html>
