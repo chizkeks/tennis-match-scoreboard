@@ -1,9 +1,6 @@
 package org.petprojects.tennis.dto;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +8,6 @@ import java.util.List;
 @Data
 public class OngoingMatchDto {
     private Score<GamePoints> gameScore;
-    @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private List<Score<Integer>> setsScore = new ArrayList<>();
     private PlayerDto firstPlayer;
@@ -25,7 +21,7 @@ public class OngoingMatchDto {
     }
 
     public Score<Integer> getOngoingSetScore() {
-        if(setsScore == null || setsScore.isEmpty()) {
+        if(setsScore.isEmpty()) {
             Score<Integer> curScore = new Score<>(0, 0);
             setsScore.add(curScore);
         }

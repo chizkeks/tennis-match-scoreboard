@@ -1,8 +1,6 @@
 package org.petprojects.tennis.service;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.petprojects.tennis.dao.BaseRepository;
 import org.petprojects.tennis.dao.MatchRepository;
 import org.petprojects.tennis.dto.FinishedMatchDto;
@@ -15,15 +13,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FinishedMatchesPersistenceService {
-    private BaseRepository<Integer, Match> matchRepository = new MatchRepository(HibernateUtil.getSessionFactory().getCurrentSession());
+    private BaseRepository<Integer, Match> matchRepository;
 
     public static FinishedMatchesPersistenceService getInstance() {return FinishedMatchesPersistenceServiceHelper.singletonObject;}
     private static class FinishedMatchesPersistenceServiceHelper {
         public static FinishedMatchesPersistenceService singletonObject = new FinishedMatchesPersistenceService();
     }
 
+    private FinishedMatchesPersistenceService() {
+        this.matchRepository = new MatchRepository(HibernateUtil.getSessionFactory().getCurrentSession());
+    }
     public List<FinishedMatchDto> getFinishedMatchesList() {
         return matchRepository.findAll().stream().map(MatchMapper::matchToFinishedMatchDto).collect(Collectors.toList());
     }

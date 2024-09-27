@@ -11,15 +11,15 @@
 
 <html>
     <head>
-        <h1> Creation of a new match</h1>
+        <h1>Creation of a new match</h1>
     </head>
     <body>
-        <form action="${pageContext.request.contextPath}/new-match" method="post">
+        <form action="new-match" method="post">
             <label for="first_player">First player name:</label><br>
             <input type="text" id="first_player" name="first_player" required><br>
             <label for="second_player">Second player name:</label><br>
             <input type="text" id="second_player" name="second_player" required>
-            <button type="button">Начать</button>
+            <button type="submit">Начать</button>
         </form>
     </body>
 </html>
