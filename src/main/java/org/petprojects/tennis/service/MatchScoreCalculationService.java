@@ -56,7 +56,7 @@ public class MatchScoreCalculationService {
         Score<GamePoints> gameScore = match.getGameScore();
         if (scorer == Scorer.FIRST_PLAYER) {
             if(gameScore.getFirstPlayerScore().equals(GamePoints.FORTY) && gameScore.getSecondPlayerScore().equals(GamePoints.ADVANTAGE)) {
-                gameScore.setFirstPlayerScore(GamePoints.FORTY);
+                gameScore.setSecondPlayerScore(GamePoints.FORTY);
             } else if(gameScore.getFirstPlayerScore().equals(GamePoints.FORTY)
                     && gameScore.getFirstPlayerScore().ordinal() - gameScore.getSecondPlayerScore().ordinal() > 0) {
                 match.resetGameScore();
