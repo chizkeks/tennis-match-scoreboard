@@ -19,7 +19,8 @@ public class OngoingMatchServlet extends HttpServlet {
     private final MatchScoreCalculationService matchScoreCalculationService = MatchScoreCalculationService.getInstance();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        OngoingMatchDto match = ongoingMatchesService.getMatch((UUID) req.getSession().getAttribute("uuid"));
+        UUID uuid = UUID.fromString(req.getParameter("uuid"));
+        OngoingMatchDto match = ongoingMatchesService.getMatch(uuid);
         req.setAttribute("firstPlayerName", match.getFirstPlayer().getName());
         req.setAttribute("secondPlayerName", match.getSecondPlayer().getName());
         req.setAttribute("playersScore", match.getGameScore());
@@ -29,7 +30,8 @@ public class OngoingMatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        OngoingMatchDto match = ongoingMatchesService.getMatch((UUID) req.getSession().getAttribute("uuid"));
+        UUID uuid = UUID.fromString(req.getParameter("uuid"));
+        OngoingMatchDto match = ongoingMatchesService.getMatch(uuid);
         matchScoreCalculationService.updateScore(match, req.getParameter("player").equals("1") ? Scorer.FIRST_PLAYER : Scorer.SECOND_PLAYER);
         req.setAttribute("firstPlayerName", match.getFirstPlayer().getName());
         req.setAttribute("secondPlayerName", match.getSecondPlayer().getName());

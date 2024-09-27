@@ -53,7 +53,7 @@ public class NewMatchServlet extends HttpServlet {
         ongoingMatchDto.setSecondPlayer(secondPlayer);
         ongoingMatchDto.setGameScore(new Score<>(GamePoints.ZERO, GamePoints.ZERO));
         UUID uuid = ongoingMatchesService.addMatch(ongoingMatchDto);
-        req.getSession().setAttribute("uuid", uuid);
-        resp.sendRedirect("/ongoing-match");
+        //req.getSession().setAttribute("uuid", uuid);
+        resp.sendRedirect("/ongoing-match?uuid=" + uuid.toString());
     }
 }
