@@ -7,7 +7,6 @@ import org.petprojects.tennis.entity.BaseEntity;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class BaseRepository<K extends Serializable, E extends BaseEntity<K>> implements Repository<K, E> {
@@ -22,8 +21,8 @@ public class BaseRepository<K extends Serializable, E extends BaseEntity<K>> imp
     }
 
     @Override
-    public Optional<E> findById(K id) {
-        return Optional.ofNullable(entityManager.find(entityClass, id));
+    public E findById(K id) {
+        return entityManager.find(entityClass, id);
     }
 
     @Override
