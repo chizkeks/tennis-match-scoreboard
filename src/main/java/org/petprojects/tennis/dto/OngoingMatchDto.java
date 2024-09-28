@@ -36,7 +36,8 @@ public class OngoingMatchDto {
     public int  getFirstPlayerWonSets() {
         int counter = 0;
         for(Score<Integer> score : setsScore) {
-            if(score.getFirstPlayerScore() > score.getSecondPlayerScore())
+            if(score.getFirstPlayerScore() > score.getSecondPlayerScore()
+            && score.getFirstPlayerScore() >= 6)
                 counter++;
         }
         return counter;
@@ -44,7 +45,8 @@ public class OngoingMatchDto {
     public int  getSecondPlayerWonSets() {
         int counter = 0;
         for(Score<Integer> score : setsScore) {
-            if(score.getFirstPlayerScore() < score.getSecondPlayerScore())
+            if(score.getFirstPlayerScore() < score.getSecondPlayerScore()
+                    && score.getSecondPlayerScore() >= 6)
                 counter++;
         }
         return counter;

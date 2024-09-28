@@ -1,12 +1,18 @@
 package org.petprojects.tennis.service;
 
+import jakarta.persistence.NoResultException;
 import lombok.Data;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.petprojects.tennis.dao.BaseRepository;
 import org.petprojects.tennis.dao.MatchRepository;
+import org.petprojects.tennis.dao.PlayerRepository;
 import org.petprojects.tennis.dto.FinishedMatchDto;
 import org.petprojects.tennis.dto.OngoingMatchDto;
 import org.petprojects.tennis.entity.Match;
+import org.petprojects.tennis.entity.Player;
 import org.petprojects.tennis.mapper.MatchMapper;
+import org.petprojects.tennis.mapper.PlayerMapper;
 import org.petprojects.tennis.util.HibernateUtil;
 
 import java.util.List;
@@ -14,7 +20,9 @@ import java.util.stream.Collectors;
 
 @Data
 public class FinishedMatchesPersistenceService {
+    private Session session;
     private BaseRepository<Integer, Match> matchRepository;
+    final PlayerRepository playerRepository;
 
     public static FinishedMatchesPersistenceService getInstance() {return FinishedMatchesPersistenceServiceHelper.singletonObject;}
     private static class FinishedMatchesPersistenceServiceHelper {
@@ -22,13 +30,46 @@ public class FinishedMatchesPersistenceService {
     }
 
     private FinishedMatchesPersistenceService() {
-        this.matchRepository = new MatchRepository(HibernateUtil.getSessionFactory().getCurrentSession());
+        this.session = HibernateUtil.getSessionFactory().openSession();
+        this.matchRepository = new MatchRepository(session);
+        this.playerRepository = new PlayerRepository(session);
     }
     public List<FinishedMatchDto> getFinishedMatchesList() {
         return matchRepository.findAll().stream().map(MatchMapper::matchToFinishedMatchDto).collect(Collectors.toList());
     }
 
     public void save(OngoingMatchDto match) {
-        matchRepository.create(MatchMapper.ongoingMatchToMatch(match));
+        Transaction transaction = session.beginTransaction();
+
+        Player firstPlayer = PlayerMapper.dtoToPlayer(match.getFirstPlayer());
+        Player secondPlayer  = PlayerMapper.dtoToPlayer(match.getSecondPlayer());
+
+        Match newMatch = MatchMapper.ongoingMatchToMatch(match);
+
+        //Creation of players if required
+        try {
+            firstPlayer = playerRepository.findByName(firstPlayer.getName());
+        } catch (NoResultException e) {
+            playerRepository.create(firstPlayer);
+        }
+
+        try {
+            secondPlayer = playerRepository.findByName(secondPlayer.getName());
+        } catch (NoResultException e) {
+            playerRepository.create(secondPlayer);
+        }
+
+        newMatch.setFirstPlayer(firstPlayer);
+        newMatch.setSecondPlayer(secondPlayer);
+        newMatch.setWinner(firstPlayer.getName().equals(newMatch.getWinner().getName()) ? firstPlayer : secondPlayer);
+
+        matchRepository.create(newMatch);
+
+        try {
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println("Commit was unsuccessful");
+            transaction.rollback();
+        }
     }
 }
