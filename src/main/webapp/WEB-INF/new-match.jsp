@@ -10,11 +10,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
-    <head>
-        <h1>Creation of a new match</h1>
-    </head>
     <body>
-        <form action="new-match" method="post">
+    <!-- Include header.jsp -->
+    <c:set var="page" value="newMatch"/>
+    <jsp:include page="header.jsp" />
+    <form action="new-match" method="post">
             <label for="first_player">First player name:</label><br>
             <input type="text" id="first_player" name="first_player" required><br>
             <label for="second_player">Second player name:</label><br>

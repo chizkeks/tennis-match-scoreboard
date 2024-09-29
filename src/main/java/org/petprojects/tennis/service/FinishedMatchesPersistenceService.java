@@ -4,7 +4,6 @@ import jakarta.persistence.NoResultException;
 import lombok.Data;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.petprojects.tennis.dao.BaseRepository;
 import org.petprojects.tennis.dao.MatchRepository;
 import org.petprojects.tennis.dao.PlayerRepository;
 import org.petprojects.tennis.dto.FinishedMatchDto;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 @Data
 public class FinishedMatchesPersistenceService {
     private Session session;
-    private BaseRepository<Integer, Match> matchRepository;
+    private MatchRepository matchRepository;
     final PlayerRepository playerRepository;
 
     public static FinishedMatchesPersistenceService getInstance() {return FinishedMatchesPersistenceServiceHelper.singletonObject;}
@@ -36,6 +35,10 @@ public class FinishedMatchesPersistenceService {
     }
     public List<FinishedMatchDto> getFinishedMatchesList() {
         return matchRepository.findAll().stream().map(MatchMapper::matchToFinishedMatchDto).collect(Collectors.toList());
+    }
+
+    public List<FinishedMatchDto> getFinishedMatchesByPlayerNameWithPagination(String name, int page) {
+        return matchRepository.findByPlayerNameWithPagination(name, page * 5, 5).stream().map(MatchMapper::matchToFinishedMatchDto).collect(Collectors.toList());
     }
 
     public void save(OngoingMatchDto match) {
