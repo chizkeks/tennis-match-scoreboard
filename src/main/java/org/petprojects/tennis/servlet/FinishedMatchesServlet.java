@@ -30,7 +30,7 @@ public class FinishedMatchesServlet extends HttpServlet {
         req.setAttribute("finishedMatches", finishedMatches);
         int size = finishedMatchesService.getFinishedMatchesList().size();
         if(size > 0) {
-            req.setAttribute("totalPages", size/5 + 1);
+            req.setAttribute("totalPages", size/5 + (size % 5 == 0 ? 0 : 1));
         } else
             req.setAttribute("totalPages", 0);
         req.getRequestDispatcher("/WEB-INF/finished-matches.jsp").forward(req, resp);
