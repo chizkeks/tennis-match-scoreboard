@@ -9,58 +9,57 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
-<head>
-    <title>Теннисное Табло Судьи</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #e0e0e0;
-        }
-        .scoreboard {
-            width: 400px;
-            padding: 20px;
-            background-color: white;
-            border: 2px solid #000;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-        }
-        .player {
-            font-size: 20px;
-            margin: 10px 0;
-        }
-        .score {
-            font-size: 36px;
-            font-weight: bold;
-        }
-        .game {
-            font-size: 16px;
-            margin: 5px 0;
-        }
-        .buttons {
-            margin-top: 20px;
-        }
-        button {
-            padding: 10px 15px;
-            margin: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #4CAF50;
-            color: white;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
+<style>
+    /*body {*/
+    /*    font-family: Arial, sans-serif;*/
+    /*    display: flex;*/
+    /*    justify-content: center;*/
+    /*    align-items: center;*/
+    /*    height: 100vh;*/
+    /*    background-color: #e0e0e0;*/
+    /*}*/
+    .scoreboard {
+        width: 400px;
+        padding: 20px;
+        background-color: white;
+        border: 2px solid #000;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+    .player {
+        font-size: 20px;
+        margin: 10px 0;
+    }
+    .score {
+        font-size: 36px;
+        font-weight: bold;
+    }
+    .game {
+        font-size: 16px;
+        margin: 5px 0;
+    }
+    .buttons {
+        margin-top: 20px;
+    }
+    button {
+        padding: 10px 15px;
+        margin: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background-color: #4CAF50;
+        color: white;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+</style>
 <body>
-${param.name}
+<!-- Include header.jsp -->
+<c:set var="page" value="newMatch"/>
+<jsp:include page="header.jsp" />
 <div class="scoreboard">
     <div class="caption">Теннисный матч (максимум 3 сета)</div>
     <div class="player">Игрок 1: ${requestScope.firstPlayerName}</div>

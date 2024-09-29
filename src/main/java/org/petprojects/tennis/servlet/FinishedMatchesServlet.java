@@ -17,9 +17,27 @@ public class FinishedMatchesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<FinishedMatchDto> finishedMatches =  finishedMatchesService.getFinishedMatchesList();
-        req.setAttribute("finishedMatches", finishedMatches);
+        setMatches(req, resp);
+    }
 
+    private void setMatches(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<FinishedMatchDto> finishedMatches;
+        int page = req.getParameter("page") == null ? 1 : Integer.parseInt(req.getParameter("page"));
+        req.setAttribute("currentPage", page);
+        String playerName = req.getParameter("playerName");
+
+        finishedMatches = finishedMatchesService.getFinishedMatchesByPlayerNameWithPagination(playerName, page - 1);
+        req.setAttribute("finishedMatches", finishedMatches);
+        int size = finishedMatchesService.getFinishedMatchesList().size();
+        if(size > 0) {
+            req.setAttribute("totalPages", size/5 + 1);
+        } else
+            req.setAttribute("totalPages", 0);
         req.getRequestDispatcher("/WEB-INF/finished-matches.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setMatches(req, resp);
     }
 }

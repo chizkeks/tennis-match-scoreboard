@@ -24,6 +24,9 @@ public class OngoingMatchServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UUID uuid = UUID.fromString(req.getParameter("uuid"));
         OngoingMatchDto match = ongoingMatchesService.getMatch(uuid);
+        if (match == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
         req.setAttribute("firstPlayerName", match.getFirstPlayer().getName());
         req.setAttribute("secondPlayerName", match.getSecondPlayer().getName());
         req.setAttribute("playersScore", match.getGameScore());
@@ -35,19 +38,18 @@ public class OngoingMatchServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UUID uuid = UUID.fromString(req.getParameter("uuid"));
         OngoingMatchDto match = ongoingMatchesService.getMatch(uuid);
+        if (match == null) {
+            req.getRequestDispatcher("/WEB-INF/match-is-over.jsp").forward(req, resp);
+        }
         match.setWinner(match.getFirstPlayer());
         matchScoreCalculationService.updateScore(match, req.getParameter("scorer").equals("1") ? Scorer.FIRST_PLAYER : Scorer.SECOND_PLAYER);
-        req.setAttribute("firstPlayerName", match.getFirstPlayer().getName());
-        req.setAttribute("secondPlayerName", match.getSecondPlayer().getName());
-        req.setAttribute("playersScore", match.getGameScore());
-        req.setAttribute("sets", match.getSetsScore());
         if(match.getWinner() != null) {
             //Saving of th match
             finishedMatchesPersistenceService.save(match);
+            ongoingMatchesService.removeMatch(uuid);
             resp.sendRedirect("/finished-matches");
         } else {
-            req.getRequestDispatcher("/WEB-INF/ongoing-match.jsp").forward(req, resp);
+            resp.sendRedirect("/ongoing-match?uuid=" + uuid);
         }
-
     }
 }
