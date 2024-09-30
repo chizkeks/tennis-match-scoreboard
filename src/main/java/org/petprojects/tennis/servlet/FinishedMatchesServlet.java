@@ -14,6 +14,8 @@ import java.util.List;
 @WebServlet("/finished-matches")
 public class FinishedMatchesServlet extends HttpServlet {
     private static final FinishedMatchesPersistenceService finishedMatchesService = FinishedMatchesPersistenceService.getInstance();
+    private static final long serialVersionUID = 1L;
+    private static final int MATCH_PER_PAGE = 5;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -26,11 +28,11 @@ public class FinishedMatchesServlet extends HttpServlet {
         req.setAttribute("currentPage", page);
         String playerName = req.getParameter("playerName");
 
-        finishedMatches = finishedMatchesService.getFinishedMatchesByPlayerNameWithPagination(playerName, page - 1);
+        finishedMatches = finishedMatchesService.getFinishedMatchesByPlayerNameWithPagination(playerName, page - 1, MATCH_PER_PAGE);
         req.setAttribute("finishedMatches", finishedMatches);
         int size = finishedMatchesService.getFinishedMatchesList().size();
         if(size > 0) {
-            req.setAttribute("totalPages", size/5 + (size % 5 == 0 ? 0 : 1));
+            req.setAttribute("totalPages", size/MATCH_PER_PAGE + (size % MATCH_PER_PAGE == 0 ? 0 : 1));
         } else
             req.setAttribute("totalPages", 0);
         req.getRequestDispatcher("/WEB-INF/finished-matches.jsp").forward(req, resp);
