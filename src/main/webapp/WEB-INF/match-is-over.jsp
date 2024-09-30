@@ -8,12 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
-<body>
-<!-- Include header.jsp -->
-<c:set var="page" value="newMatch"/>
-<jsp:include page="header.jsp" />
-<div>
-    Match is already finished!
-</div>
-</body>
+    <body>
+        <!-- Include header.jsp -->
+        <jsp:include page="header.jsp" />
+        <div>
+            Match is already finished!
+        </div>
+    </body>
 </html>

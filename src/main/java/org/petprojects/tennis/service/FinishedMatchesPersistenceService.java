@@ -1,6 +1,7 @@
 package org.petprojects.tennis.service;
 
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceException;
 import lombok.Data;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -37,42 +38,50 @@ public class FinishedMatchesPersistenceService {
         return matchRepository.findAll().stream().map(MatchMapper::matchToFinishedMatchDto).collect(Collectors.toList());
     }
 
-    public List<FinishedMatchDto> getFinishedMatchesByPlayerNameWithPagination(String name, int page) {
-        return matchRepository.findByPlayerNameWithPagination(name, page * 5, 5).stream().map(MatchMapper::matchToFinishedMatchDto).collect(Collectors.toList());
+    public List<FinishedMatchDto> getFinishedMatchesByPlayerNameWithPagination(String name, int page, int pageSize) {
+        return matchRepository.findByPlayerNameWithPagination(name, page * pageSize, pageSize).stream().map(MatchMapper::matchToFinishedMatchDto).collect(Collectors.toList());
     }
 
     public void save(OngoingMatchDto match) {
+
         Transaction transaction = session.beginTransaction();
-
-        Player firstPlayer = PlayerMapper.dtoToPlayer(match.getFirstPlayer());
-        Player secondPlayer  = PlayerMapper.dtoToPlayer(match.getSecondPlayer());
-
-        Match newMatch = MatchMapper.ongoingMatchToMatch(match);
-
-        //Creation of players if required
         try {
-            firstPlayer = playerRepository.findByName(firstPlayer.getName());
-        } catch (NoResultException e) {
-            playerRepository.create(firstPlayer);
-        }
+            Player firstPlayer = PlayerMapper.dtoToPlayer(match.getFirstPlayer());
+            Player secondPlayer  = PlayerMapper.dtoToPlayer(match.getSecondPlayer());
 
-        try {
-            secondPlayer = playerRepository.findByName(secondPlayer.getName());
-        } catch (NoResultException e) {
-            playerRepository.create(secondPlayer);
-        }
+            Match newMatch = MatchMapper.ongoingMatchToMatch(match);
 
-        newMatch.setFirstPlayer(firstPlayer);
-        newMatch.setSecondPlayer(secondPlayer);
-        newMatch.setWinner(firstPlayer.getName().equals(newMatch.getWinner().getName()) ? firstPlayer : secondPlayer);
+            //Creation of players if required
+            try {
+                firstPlayer = playerRepository.findByName(firstPlayer.getName());
+            } catch (NoResultException e) {
+                playerRepository.create(firstPlayer);
+            }
 
-        matchRepository.create(newMatch);
+            try {
+                secondPlayer = playerRepository.findByName(secondPlayer.getName());
+            } catch (NoResultException e) {
+                playerRepository.create(secondPlayer);
+            }
 
-        try {
-            transaction.commit();
-        } catch (Exception e) {
-            System.out.println("Commit was unsuccessful");
-            transaction.rollback();
+            newMatch.setFirstPlayer(firstPlayer);
+            newMatch.setSecondPlayer(secondPlayer);
+            newMatch.setWinner(firstPlayer.getName().equals(newMatch.getWinner().getName()) ? firstPlayer : secondPlayer);
+
+            matchRepository.create(newMatch);
+
+            try {
+                transaction.commit();
+            } catch (Exception e) {
+                System.out.println("Commit was unsuccessful");
+                transaction.rollback();
+            }
+        } catch (PersistenceException e) {
+            System.err.println("Error during transaction: " + e.getMessage());
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;  // rethrow exception if necessary
         }
     }
 }
