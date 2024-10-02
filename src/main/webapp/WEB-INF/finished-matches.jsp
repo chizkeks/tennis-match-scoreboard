@@ -71,16 +71,16 @@
   </table>
 <c:set var="pageInt" value="${requestScope.currentPage}"/>
 <div class="buttons-container">
-  <form action="finished-matches?page=${pageInt - 1}" method="post">
+  <form action="finished-matches?player_name=${param['player_name']}&page=${pageInt - 1}" method="post">
     <button type="submit" class="btn" <c:if test="${pageInt <= 1}">disabled</c:if>>Previous</button>
   </form>
   <!-- Page numbers -->
   <c:forEach var="i" begin="1" end="${requestScope.totalPages}">
-    <form action="<c:url value='/finished-matches?page=${i}' />" method="post" style="display:inline;">
+    <form action="finished-matches?player_name=${param['player_name']}&page=${i}" method="post" style="display:inline;">
       <button type="submit" class="btn" <c:if test="${pageInt == i}">disabled</c:if>>${i}</button>
     </form>
   </c:forEach>
-  <form action="finished-matches?page=${pageInt + 1}" method="post">
+  <form action="finished-matches?player_name=${param['player_name']}&page=${pageInt + 1}" method="post">
     <button type="submit" class="btn" <c:if test="${requestScope.totalPages == pageInt or requestScope.totalPages == 0}">disabled</c:if>>Next</button>
   </form>
 </div>

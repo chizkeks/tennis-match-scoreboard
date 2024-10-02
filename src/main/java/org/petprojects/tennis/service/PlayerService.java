@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.petprojects.tennis.dao.PlayerRepository;
 import org.petprojects.tennis.dto.PlayerDto;
 import org.petprojects.tennis.entity.Player;
@@ -16,7 +15,7 @@ import org.petprojects.tennis.util.HibernateUtil;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlayerService {
     final Session session = HibernateUtil.getSessionFactory().openSession();
-    final PlayerRepository repository = new PlayerRepository(session);
+    final PlayerRepository repository = new PlayerRepository();
     final static PlayerService INSTANCE = new PlayerService();
 
     public static PlayerService getInstance() {
@@ -31,9 +30,7 @@ public class PlayerService {
         return PlayerMapper.playerToDto(player);
     }
     public PlayerDto createPlayer(PlayerDto playerDto) {
-        Transaction transaction = session.beginTransaction();
         Player player = repository.create(PlayerMapper.dtoToPlayer(playerDto));
-        transaction.commit();
         return PlayerMapper.playerToDto(player);
     }
 

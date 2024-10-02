@@ -12,7 +12,7 @@ public class PlayerRepositoryTest {
     public void assertPlayerCreation() {
         @Cleanup SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
-        PlayerRepository repository = new PlayerRepository(session);
+        PlayerRepository repository = new PlayerRepository();
         session.beginTransaction();
 
         Player player = Player.builder()

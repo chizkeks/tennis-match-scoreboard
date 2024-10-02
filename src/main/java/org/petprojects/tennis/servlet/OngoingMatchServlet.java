@@ -1,5 +1,6 @@
 package org.petprojects.tennis.servlet;
 
+import jakarta.persistence.PersistenceException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public class OngoingMatchServlet extends HttpServlet {
     private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
     private final MatchScoreCalculationService matchScoreCalculationService = MatchScoreCalculationService.getInstance();
-    private final FinishedMatchesPersistenceService finishedMatchesPersistenceService = FinishedMatchesPersistenceService.getInstance();
+    private final FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,20 +37,25 @@ public class OngoingMatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        UUID uuid = UUID.fromString(req.getParameter("uuid"));
-        OngoingMatchDto match = ongoingMatchesService.getMatch(uuid);
-        if (match == null) {
-            req.getRequestDispatcher("/WEB-INF/match-is-over.jsp").forward(req, resp);
-        }
-        match.setWinner(match.getFirstPlayer());
-        matchScoreCalculationService.updateScore(match, req.getParameter("scorer").equals("1") ? Scorer.FIRST_PLAYER : Scorer.SECOND_PLAYER);
-        if(match.getWinner() != null) {
-            //Saving of th match
-            finishedMatchesPersistenceService.save(match);
-            ongoingMatchesService.removeMatch(uuid);
-            resp.sendRedirect("/finished-matches");
-        } else {
-            resp.sendRedirect("/ongoing-match?uuid=" + uuid);
+        try {
+            UUID uuid = UUID.fromString(req.getParameter("uuid"));
+            OngoingMatchDto match = ongoingMatchesService.getMatch(uuid);
+            if (match == null) {
+                req.getRequestDispatcher("/WEB-INF/match-is-over.jsp").forward(req, resp);
+            }
+            //match.setWinner(match.getFirstPlayer());
+            matchScoreCalculationService.updateScore(match, req.getParameter("scorer").equals("1") ? Scorer.FIRST_PLAYER : Scorer.SECOND_PLAYER);
+            if (match.getWinner() != null) {
+                //Saving of th match
+                finishedMatchesPersistenceService.save(match);
+                ongoingMatchesService.removeMatch(uuid);
+                resp.sendRedirect("/finished-matches");
+            } else {
+                resp.sendRedirect("/ongoing-match?uuid=" + uuid);
+            }
+        } catch (IllegalArgumentException | PersistenceException e) {
+            //Forward to error page
+            req.getRequestDispatcher("/WEB-INF/error-page.jsp").forward(req, resp);
         }
     }
 }

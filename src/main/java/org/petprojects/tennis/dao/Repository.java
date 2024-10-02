@@ -1,9 +1,11 @@
 package org.petprojects.tennis.dao;
 
+import jakarta.persistence.EntityManager;
 import org.petprojects.tennis.entity.BaseEntity;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Function;
 
 public interface Repository <K extends Serializable, E extends BaseEntity<K>> {
     E create(E entity);
@@ -11,4 +13,5 @@ public interface Repository <K extends Serializable, E extends BaseEntity<K>> {
     void update(E entity);
     void delete(E entity);
     List<E> findAll();
+    <R> R executeTransaction(Function<EntityManager, R> operation);
 }

@@ -10,4 +10,11 @@ public class HibernateUtil {
     public static SessionFactory getSessionFactory() {
         return config.buildSessionFactory();
     }
+
+    /*public static Session getSessionMultithreading() {
+            return (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(),
+                    new Class[]{Session.class},
+                    ((proxy, method, args) -> method.invoke(factory.getCurrentSession(), args)));
+
+    }*/
 }

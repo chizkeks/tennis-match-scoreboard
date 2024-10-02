@@ -1,17 +1,17 @@
 package org.petprojects.tennis.dao;
 
-import jakarta.persistence.EntityManager;
 import org.petprojects.tennis.entity.Player;
 
 
 public class PlayerRepository extends BaseRepository<Integer, Player> {
-    public PlayerRepository(EntityManager entityManager) {
-        super(Player.class, entityManager);
+    public PlayerRepository() {
+        super(Player.class);
     }
     public Player findByName(String name) {
-        return entityManager
+        return executeTransaction(entityManager ->
+                entityManager
                 .createQuery("from Player where name = :name", Player.class)
                 .setParameter("name", name)
-                .getSingleResult();
+                .getSingleResult());
     }
 }
