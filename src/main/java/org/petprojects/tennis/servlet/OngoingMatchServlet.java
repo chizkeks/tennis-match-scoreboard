@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.petprojects.tennis.dto.OngoingMatchDto;
 import org.petprojects.tennis.dto.Scorer;
 import org.petprojects.tennis.service.FinishedMatchesPersistenceService;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @WebServlet("/ongoing-match")
+@Slf4j
 public class OngoingMatchServlet extends HttpServlet {
     private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
     private final MatchScoreCalculationService matchScoreCalculationService = MatchScoreCalculationService.getInstance();
@@ -53,9 +55,10 @@ public class OngoingMatchServlet extends HttpServlet {
             } else {
                 resp.sendRedirect("/ongoing-match?uuid=" + uuid);
             }
-        } catch (IllegalArgumentException | PersistenceException e) {
+        } catch (Exception e) {
             //Forward to error page
             req.getRequestDispatcher("/WEB-INF/error-page.jsp").forward(req, resp);
+            log.error(e.getMessage(), e);
         }
     }
 }

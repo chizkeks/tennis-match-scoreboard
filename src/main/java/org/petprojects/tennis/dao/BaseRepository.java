@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.criteria.CriteriaQuery;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.petprojects.tennis.entity.BaseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
+@Slf4j
 public class BaseRepository<K extends Serializable, E extends BaseEntity<K>> implements Repository<K, E> {
     final Class<E> entityClass;
 
@@ -60,13 +62,13 @@ public class BaseRepository<K extends Serializable, E extends BaseEntity<K>> imp
             transaction = session.beginTransaction();
 
             R result = operation.apply(session);
-
+            log.error("Test tr {}", session);
             transaction.commit();
 
             return result;
         } catch (PersistenceException e) {
             if(transaction != null && transaction.isActive()){
-                System.err.println("Error during transaction: " + e.getMessage());
+                log.error("Error during transaction {}",e.getMessage());
                 transaction.rollback();
             }
             throw e;
