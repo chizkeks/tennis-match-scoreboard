@@ -35,6 +35,64 @@
   tr:hover {
     background-color: #ddd; /* Darker grey on hover */
   }
+  .winner {
+    font-weight: bold;
+    color: #4CAF50; /* Green color for winner */
+  }
+  .winner-icon {
+    color: gold;
+    font-size: 18px;
+    margin-left: 5px;
+  }
+  /* Form Styling */
+  .search-form {
+    display: flex;
+    justify-content: center; /* Center the form horizontally */
+    align-items: center; /* Align items vertically */
+    gap: 10px; /* Space between elements */
+    margin: 20px 0; /* Add margin around the form */
+  }
+
+  .search-form label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px; /* Space between label and input */
+  }
+
+  .search-form input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 200px;
+  }
+
+  .search-form .btn {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove border */
+    color: white; /* White text */
+    padding: 10px 15px; /* Adjust padding */
+    font-size: 16px; /* Adjust font size */
+    cursor: pointer; /* Pointer on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition */
+  }
+
+  .search-form .btn:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }
+
+  /* Additional styling for mobile responsiveness */
+  @media (max-width: 600px) {
+    .search-form {
+      flex-direction: column; /* Stack the form elements vertically on smaller screens */
+      align-items: flex-start; /* Align items to the left */
+    }
+
+    .search-form input[type="text"] {
+      width: 100%; /* Make the input field full-width on small screens */
+    }
+  }
 </style>
 
 <html>
@@ -42,10 +100,10 @@
 <!-- Include header.jsp -->
 <c:set var="page" value="newMatch"/>
 <jsp:include page="header.jsp" />
-<form action="finished-matches" method="get">
-  <label for="player_name">Player name:</label><br>
-  <input type="text" id="player_name" name="player_name" value="${param['player_name']}"><br>
-  <button type="submit">Search</button>
+<form action="finished-matches" method="get" class="search-form">
+  <label for="player_name">Player Name:</label>
+  <input type="text" id="player_name" name="player_name" value="${param['player_name']}" placeholder="Enter player name">
+  <button type="submit" class="btn">Search</button>
 </form>
 <table>
   <thead>
@@ -53,19 +111,33 @@
       <th>Match ID</th>
       <th>First player name</th>
       <th>Second player name</th>
-      <th>Winner of the match</th>
     </tr>
   </thead>
 
   <tbody>
+  <c:if test="${requestScope.finishedMatches.size() == 0}">
+    <tr>
+      <td>no records</td>
+    </tr>
+  </c:if>
     <c:forEach var="match" items="${requestScope.finishedMatches}" varStatus="loop">
-        <tr>
-          <td>${match.id}</td>
-          <td>${match.firstPlayer.name}</td>
-          <td>${match.secondPlayer.name}</td>
-          <td>${match.winner.name}</td>
-        </tr>
-
+      <tr>
+        <td>${match.id}</td>
+        <!-- Highlight first player if they are the winner -->
+        <td class="${match.winner.id == match.firstPlayer.id ? 'winner' : ''}">
+            ${match.firstPlayer.name}
+          <c:if test="${match.winner.id == match.firstPlayer.id}">
+            <span class="winner-icon">🏆</span>
+          </c:if>
+        </td>
+        <!-- Highlight second player if they are the winner -->
+        <td class="${match.winner.id == match.secondPlayer.id ? 'winner' : ''}">
+            ${match.secondPlayer.name}
+          <c:if test="${match.winner.id == match.secondPlayer.id}">
+            <span class="winner-icon">🏆</span>
+          </c:if>
+        </td>
+      </tr>
     </c:forEach>
   </tbody>
   </table>

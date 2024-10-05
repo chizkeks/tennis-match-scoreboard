@@ -1,6 +1,5 @@
 package org.petprojects.tennis.servlet;
 
-import jakarta.persistence.PersistenceException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -47,7 +46,7 @@ public class OngoingMatchServlet extends HttpServlet {
             }
             //match.setWinner(match.getFirstPlayer());
             matchScoreCalculationService.updateScore(match, req.getParameter("scorer").equals("1") ? Scorer.FIRST_PLAYER : Scorer.SECOND_PLAYER);
-            if (match.getWinner() != null) {
+            if (match.getWinner() != null && ongoingMatchesService.getMatch(uuid) != null) {
                 //Saving of th match
                 finishedMatchesPersistenceService.save(match);
                 ongoingMatchesService.removeMatch(uuid);

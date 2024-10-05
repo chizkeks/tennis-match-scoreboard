@@ -58,11 +58,12 @@ public class BaseRepository<K extends Serializable, E extends BaseEntity<K>> imp
     @Override
     public <R> R executeTransaction(Function<EntityManager, R> operation) throws PersistenceException {
         Transaction transaction = null;
-        try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
 
             R result = operation.apply(session);
-            log.error("Test tr {}", session);
             transaction.commit();
 
             return result;
