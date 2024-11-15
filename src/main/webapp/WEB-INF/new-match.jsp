@@ -32,7 +32,7 @@
         </div>
         <div>
             <nav class="nav-links">
-                <a class="nav-link" href="new-match">Home</a>
+                <a class="nav-link" href="main-menu">Home</a>
                 <a class="nav-link" href="finished-matches">Matches</a>
             </nav>
         </div>
