@@ -28,7 +28,14 @@ public class FinishedMatchesServlet extends HttpServlet {
 
         finishedMatches = finishedMatchesService.getFinishedMatchesByPlayerNameWithPagination(playerName, page - 1);
         req.setAttribute("finishedMatches", finishedMatches);
-        int size = finishedMatchesService.getFinishedMatchesList().size();
+        req.setAttribute("playerName", playerName);
+        int size = 0;
+        if(playerName == null || playerName.isEmpty()) {
+            size = finishedMatchesService.getFinishedMatchesList().size();
+        } else {
+            size = finishedMatches.size();
+        }
+
         if(size > 0) {
             req.setAttribute("totalPages", size/5 + 1);
         } else

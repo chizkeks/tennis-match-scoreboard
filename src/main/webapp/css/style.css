@@ -212,6 +212,7 @@ footer {
     background-color: #42a7f5;
     color: #fff;
     cursor: pointer;
+    float: left;
 }
 
 /* Current match */
@@ -422,7 +423,7 @@ footer {
 }
 
 .input-filter {
-    width: 100%;
+    width: 75%;
     border-radius: 15px;
     background-color: #dddddd;
     border: none;
@@ -430,6 +431,7 @@ footer {
     padding-bottom: 12px;
     padding-top: 12px;
     color: #000;
+    float: left;
 }
 
 .table-matches {
@@ -495,4 +497,14 @@ footer {
 
 .num-page.current {
     font-weight: bold;
+}
+
+.score-btn-form {
+    margin: 0;
+}
+
+.player-filter-form {
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
 }
