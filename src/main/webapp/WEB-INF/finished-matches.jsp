@@ -8,124 +8,80 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<style>
-  /*body {*/
-  /*  font-family: Arial, sans-serif;*/
-  /*  margin: 20px;*/
-  /*}*/
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0;
-    border: 2px solid #000;
-    border-radius: 10px;
-  }
-  th, td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #dddddd;
-  }
-  th {
-    background-color: #4CAF50; /* Green background */
-    color: white; /* White text */
-  }
-  tr:nth-child(even) {
-    background-color: #f2f2f2; /* Light grey background for even rows */
-  }
-  tr:hover {
-    background-color: #ddd; /* Darker grey on hover */
-  }
-</style>
-
 <html>
-<body>
-<!-- Include header.jsp -->
-<c:set var="page" value="newMatch"/>
-<jsp:include page="header.jsp" />
-<form action="finished-matches" method="get">
-  <label for="player_name">Player name:</label><br>
-  <input type="text" id="player_name" name="player_name" value="${param['player_name']}"><br>
-  <button type="submit">Search</button>
-</form>
-<table>
-  <thead>
-    <tr>
-      <th>Match ID</th>
-      <th>First player name</th>
-      <th>Second player name</th>
-      <th>Winner of the match</th>
-    </tr>
-  </thead>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tennis Scoreboard | Finished Matches</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
 
-  <tbody>
-    <c:forEach var="match" items="${requestScope.finishedMatches}" varStatus="loop">
+  <script src="../js/app.js"></script>
+</head>
+
+<body>
+<header class="header">
+  <section class="nav-header">
+    <div class="brand">
+      <div class="nav-toggle">
+        <img src="../img/menu.png" alt="Logo" class="logo">
+      </div>
+      <span class="logo-text">TennisScoreboard</span>
+    </div>
+    <div>
+      <nav class="nav-links">
+        <a class="nav-link" href="main-menu">Home</a>
+        <a class="nav-link" href="finished-matches">Matches</a>
+      </nav>
+    </div>
+  </section>
+</header>
+<main>
+  <div class="container">
+    <h1>Matches</h1>
+    <div class="input-container">
+      <form class = "player-filter-form" action="finished-matches" method="get">
+        <input class="input-filter" placeholder="Filter by name" type="text" id="playerName" name="playerName" value="${param['playerName']}"/>
+        <div>
+          <button type="submit" class="btn-filter">Filter</button>
+        </div>
+      </form>
+    </div>
+
+    <table class="table-matches">
+      <tr>
+        <th>Player One</th>
+        <th>Player Two</th>
+        <th>Winner</th>
+      </tr>
+      <c:forEach var="match" items="${requestScope.finishedMatches}" varStatus="loop">
         <tr>
-          <td>${match.id}</td>
           <td>${match.firstPlayer.name}</td>
           <td>${match.secondPlayer.name}</td>
-          <td>${match.winner.name}</td>
+          <td><span class="winner-name-td">${match.winner.name}</span></td>
         </tr>
+      </c:forEach>
+    </table>
 
-    </c:forEach>
-  </tbody>
-  </table>
-<c:set var="pageInt" value="${requestScope.currentPage}"/>
-<div class="buttons-container">
-  <form action="finished-matches?page=${pageInt - 1}" method="post">
-    <button type="submit" class="btn" <c:if test="${pageInt <= 1}">disabled</c:if>>Previous</button>
-  </form>
-  <!-- Page numbers -->
-  <c:forEach var="i" begin="1" end="${requestScope.totalPages}">
-    <form action="<c:url value='/finished-matches?page=${i}' />" method="post" style="display:inline;">
-      <button type="submit" class="btn" <c:if test="${pageInt == i}">disabled</c:if>>${i}</button>
-    </form>
-  </c:forEach>
-  <form action="finished-matches?page=${pageInt + 1}" method="post">
-    <button type="submit" class="btn" <c:if test="${requestScope.totalPages == pageInt or requestScope.totalPages == 0}">disabled</c:if>>Next</button>
-  </form>
-</div>
-<style>
-  /* Button Styling */
-  .btn {
-    background-color: #4CAF50; /* Green background */
-    border: none; /* Remove border */
-    color: white; /* White text */
-    padding: 12px 20px; /* Some padding */
-    text-align: center; /* Center the text */
-    text-decoration: none; /* Remove underline */
-    display: inline-block; /* Keep it inline */
-    font-size: 16px; /* Increase font size */
-    margin: 10px 5px; /* Add some space between buttons */
-    cursor: pointer; /* Pointer/hand icon on hover */
-    border-radius: 10px; /* Rounded corners */
-    transition: background-color 0.3s ease; /* Animation on hover */
-  }
-
-  /* Hover effect for the buttons */
-  .btn:hover {
-    background-color: #45a049; /* Darker green */
-  }
-
-  /* Disabled button styling */
-  .btn:disabled {
-    background-color: #ddd; /* Gray background */
-    color: #aaa; /* Gray text */
-    cursor: not-allowed; /* Disable hover effect */
-  }
-
-  /* Adjust button spacing and alignment */
-  .buttons-container {
-    display: flex;
-    justify-content: center; /* Center the buttons */
-    align-items: center;
-  }
-
-  /* Add additional styling for mobile */
-  @media (max-width: 600px) {
-    .btn {
-      width: 100%; /* Make buttons full-width on small screens */
-    }
-  }
-</style>
+    <c:set var="pageInt" value="${requestScope.currentPage}"/>
+    <div class="pagination">
+      <a class="prev" href="finished-matches?page=${pageInt - 1}&playerName=${playerName}" <c:if test="${pageInt <= 1}">disabled</c:if>> < </a>
+      <c:forEach var="i" begin="1" end="${requestScope.totalPages}">
+        <a <c:if test="${pageInt == i}">class="num-page current"</c:if>
+           <c:if test="${pageInt != i}">class="num-page"</c:if>
+           href="/finished-matches?page=${i}&playerName=${playerName}">${i}</a>
+      </c:forEach>
+      <a class="next" href="finished-matches?page=${pageInt + 1}&playerName=${playerName}" ${requestScope.totalPages == pageInt or requestScope.totalPages == 0}> > </a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer">
+    <p>&copy; Tennis Scoreboard, project from <a href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a>
+      roadmap.</p>
+  </div>
+</footer>
 </body>
 </html>
